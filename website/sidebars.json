@@ -29,7 +29,8 @@
       "twilio-app-tutorial",
       "sample-canvases",
       "airtable",
-      "freshdesk"
+      "freshdesk",
+      "todo-app"
     ],
     "Reference": [
       "function-reference",
