@@ -5,8 +5,17 @@ title: Task Allocation App
 
 This tutorial will first teach you how to create a simple todo list app in Dark. Then you will learn more other core concepts of Dark, by extending the app allocate tasks based on the time you have available available each day.
 
-## What you'll learn
-
+## What you'll learn to
+- Create HTTP handlers from 404s
+- Create parameterize HTTP handlers
+- Create DB, insert entries, update entries, and query
+- Use a REPL to insert an entry into a DB
+- Add code to existing handler
+- Get data from related datastores
+- Spin data into async tasks
+- Set up CRON job
+- Call a 3rd party API
+- Send a Twilio text with Dark
 
 ## What you'll need
 
@@ -32,7 +41,7 @@ Here you will create a task, save it in Dark.
 ![assets/todo/fe-0.png](assets/todo/fe-0.png)
 To create a task just enter some text both fields, hit enter or click away.
 
-It will turn into a card, and what you also notice if you have your console open is that there's a 404 in the network request, when it tries to call *POST /task*
+It will turn into a card, and what you also notice if you have your console open is that there's a 404 in the network request, when it tries to call `POST /task`
 ![assets/todo/fe-1.png](assets/todo/fe-1.png)
 
 Go to the Dark canvas where you are doing your project, and you can find this request.
@@ -43,22 +52,18 @@ Click on *+* icon to create a HTTP handler populated with data from your 404 req
 Now if you create a request again from the frontend, you'll get a 500 instead of a 404.
 Before we can properly return a OK response, we must first setup a place to store our DB.
 
-> Learned: Creating HTTP handler from 404
-
 ### Creating Task datastore
 
-Create a datastore named *Task* with the following schema:
+Create a datastore named 'Task' with the following schema:
 [![assets/todo/db-task.png](assets/todo/db-task.png)](https://darklang.com/a/sample-todo#db=1690936501)
 
 Now we are ready to populate the datastore!
-Go back to your *POST /task* code
+Go back to your `POST /task` code
 ![assets/todo/1-2.png](assets/todo/1-2.png)
 
 DB::generateKey creates a UUID-like string key that will be used to uniquely identify the entry. Your key can be any string, as long as you keep it consistent. You can learn more about [key-value datastore](/dark-backend-components#persistent-datastores).
 
 Now if you try to create a new task again. No 404s nor 500! We have 200, success at last!
-
-> Learned: Creating DB & inserting into it
 
 ### Marking tasks as DONE
 
@@ -75,9 +80,7 @@ This method allows you to create parameterized paths, and these will be exposed 
 Now you can update your task and mark it as complete.
 [![assets/todo/1-6.png](assets/todo/1-6.png)](https://darklang.com/a/sample-todo#handler=1805186834)
 
-> Learned: Creating parameterize paths. Updating existing database entry.
-
-*You have completed your simple todo list app!*
+**You have completed your simple todo list app!**
 
 ## Creating DayLists & Loading data from Dark
 
@@ -98,14 +101,11 @@ Since DB::set is an impure function, click on the play button to execute. This w
 
 Naming can be hard, we don't want to be held up by trying to name your one off code. Unnamed REPLs have auto-generated names, they are inspired by the animals of St. Louis Zoo. Cute at first, but with too many REPLs in your project, it can easily become a real zoo of confusion. You can rename your REPLs to more action descriptive names, by double clicking into their names.
 
-> Learned: Inserting data via REPL
-
 ### Update POST /task
 
 Now let's insert all newly create tasks into the unsorted list. Update your */task POST* endpoint, by adding the selected code.
 
-![assets/todo/2-12.png](assets/todo/2-12.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=2003288259)
+[![assets/todo/2-12.png](assets/todo/2-12.png)](https://darklang.com/a/sample-todo#handler=2003288259)
 
 Now if you add a new task it will load be added to the unsorted list.
 
@@ -114,8 +114,7 @@ Now if you add a new task it will load be added to the unsorted list.
 Create a new endpoint */tasks GET*
 
 Here what we want is to first the DayLists and then literate trought the taskKeys to get each task associated with the list.
-![assets/todo/2-13.png](assets/todo/2-13.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=1439624407)
+[![assets/todo/2-13.png](assets/todo/2-13.png)](https://darklang.com/a/sample-todo#handler=1439624407)
 
 Now if you refresh your page the last task you added should appear on the unsorted section in the left.
 
@@ -125,10 +124,9 @@ Making your days list (I recommend making one that is today, for easier testing 
 
 ![assets/todo/fe-2.png](assets/todo/fe-2.png)
 
-We will do something very similar as we did for *POST /task*, and create this HTTP handler by recovering it from the 404.
+We will do something very similar as we did for `POST /task`, and create this HTTP handler by recovering it from the 404.
 
-![assets/todo/2-3.png](assets/todo/2-3.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=714441098)
+[![assets/todo/2-3.png](assets/todo/2-3.png)](https://darklang.com/a/sample-todo#handler=714441098)
 
 You will notice here, that for DayList entries instead of generating a key, we can use the date string as a key.
 
@@ -144,18 +142,9 @@ Let's create an endpoint to handle moving tasks between lists. From the omnibox 
 
 If you drag a task from unsorted into your date list, you'll probably get a 500 because we haven't filled out our handler with code yet. 
 
-You'll notice it has the following body:
-```
-{
-  from_list_key: "unsorted",
-  to_list_key: "2020-02-24"
-}
-```
-
 In this request we want to do two things, remove key from one list and add it to another.
 
-![assets/todo/2-4.png](assets/todo/2-4.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=2114904226)
+[![assets/todo/2-4.png](assets/todo/2-4.png)](https://darklang.com/a/sample-todo#handler=2114904226)
 
 For each, we will retrieve the list by key, and update taskKeys accordingly.
 - To remove, we use List::filter and keep all keys that is not the key of the task that was just moved.
@@ -169,8 +158,7 @@ Now not only do we want to delete the list from the database, we also want to de
 
 First create a new endpoint `/list/:key DELETE`.
 
-![assets/todo/3-2.png](assets/todo/3-2.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=1109242937)
+[![assets/todo/3-2.png](assets/todo/3-2.png)](https://darklang.com/a/sample-todo#handler=1109242937)
 
 Now it's time to create a WORKER named "deleteTasksInList".
 
@@ -178,8 +166,7 @@ Now it's time to create a WORKER named "deleteTasksInList".
 
 Like `request` is an available variable for HTTP handlers, `event` is an available variable for WORKER handlers by default.
 
-![assets/todo/3-1.png](assets/todo/3-1.png)
-[copy src code](https://darklang.com/a/sample-todo#handler=1109242937)
+[![assets/todo/3-1.png](assets/todo/3-1.png)](https://darklang.com/a/sample-todo#handler=1109242937)
 
 ## Sending Daily reminders
 
