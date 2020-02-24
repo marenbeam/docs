@@ -61,7 +61,7 @@ Now we are ready to populate the datastore!
 Go back to your `POST /task` code
 ![assets/todo/1-2.png](assets/todo/1-2.png)
 
-DB::generateKey creates a UUID-like string key that will be used to uniquely identify the entry. Your key can be any string, as long as you keep it consistent. You can learn more about [key-value datastore](/dark-backend-components#persistent-datastores).
+DB::generateKey creates a UUID-like string key that will be used to uniquely identify the entry. Your key can be any string, as long as you keep it consistent. You can learn more about [key-value datastore](/dark-backend-components#persistent-datastores). We generally advise you to use semantically relevant unique keys (such as e-mail, ISBN, phone numbers, studentIDs, timestamps etc.), it is only in the case when there isn't an obvious sematically descriptive string you can use for a key should you use DB::generateKey. The next database we create will use sematically significant keys.
 
 Now if you try to create a new task again. No 404s nor 500! We have 200, success at last!
 
@@ -184,7 +184,7 @@ Now create CRON job that runs daily.
 ![assets/todo/4-1.png](assets/todo/4-1.png)
 
 ### Calling an external API
-Now that's alot of pressure just reminding you with shit you have to do. Let's soften the blow with an inspiration quote. For this we will use: https://quotes.rest/
+Now that's alot of pressure just reminding you with stuff you have to do. Let's soften the blow with an inspiration quote. For this we will use: https://quotes.rest/
 
 ![assets/todo/4-2.png](assets/todo/4-2.png)
 
