@@ -18,7 +18,7 @@ Now that we're storing requests, we can use a scheduled job (a "Cron", named aft
 
 ![assets/gettingstarted/cron_timeseconds.png](assets/gettingstarted/cron_timeseconds.png)
 
-3. Next, we'll need to filter the reports to just today's reports. Set `allRequests` to `DB::getAll Requests`. Run the function to the live value for `allRequests`.
+3. Next, we'll need to filter the reports to just today's reports. Set `allRequests` to `DB::getAll Requests`. Run the function to see the live value for `allRequests`.
 
 ![assets/gettingstarted/allrequests.png](assets/gettingstarted/allrequests.png)
 
